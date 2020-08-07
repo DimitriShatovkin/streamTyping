@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Tulpep.NotificationWindow; 
 
 namespace ExampleMenu.View
 {
@@ -20,44 +21,60 @@ namespace ExampleMenu.View
     /// </summary>
     public partial class FirstUC : UserControl
     {
+        public bool spaceButtonClicked = false; 
+        private PopupNotifier popUp = null; 
         public FirstUC()
         {
             InitializeComponent();
         }
 
+        //сравнить два текста, при изменени текста в поле ввода
         private void typingTextChanged(object sender, TextChangedEventArgs e)
         {
-            bool comparedLetters = getCurrentLetter(typingText.Text.Trim().Length, typingText.Text.Trim(), exampleText.Text.Trim());
+            string typingText = this.typingText.Text.Trim().Replace(" ","|");
+            string sampleText = this.exampleText.Text.Trim().Replace(" ", "|");
 
-            if (!comparedLetters)
+            if (!getCurrentLetter(typingText.Length, typingText, sampleText))
             {
-                int s1 = typingText.Text.Trim().Length - 1;
-                int s2= typingText.Text.Trim().Length;
+                popUp = new PopupNotifier();
+                popUp.ContentText = "Неправильный ввод";
+                popUp.Popup();
+            }
+            else
+            {
+                char nextLetterToShow = nextLetter(typingText, sampleText);
 
-                if (typingText.Text.Length == 0)
+                if (nextLetterToShow.ToString() != "|")
                 {
-                    typingText.Text.Substring(0, typingText.Text.Trim().Length - 1);
+                    popUp = new PopupNotifier();
+                    popUp.ContentText = nextLetterToShow.ToString();
+                    popUp.Popup();
                 }
-                else {
-
-                    string text = typingText.Text.Substring(0, typingText.Text.Trim().Length - 2);
-
-                    typingText.Text = text; 
+                else if(nextLetterToShow.ToString() == "|") {
+                    this.typingText.Text = this.typingText.Text + "|"; 
+                    popUp = new PopupNotifier();
+                    popUp.ContentText ="Нажмите пробел";
+                    popUp.Popup();
                 }
             }
         }
 
-        private bool getCurrentLetter(int countOf,string typingText, string text) {
 
-            countOf = countOf - 1; 
+        //**сравнить строку с входящим текстом **/
+        private bool getCurrentLetter(int typingTextLenght,string typingText, string text) {
 
-            char[] chartsofTypingText = typingText.ToCharArray();
+            if (spaceButtonClicked == true) {
+                typingText = typingText + "|"; 
+            }
+            typingTextLenght = typingTextLenght - 1; 
 
-            char[] chartsofExampleText= text.ToCharArray();
+            char[] chartsOfTypingText = typingText.ToCharArray();
 
-            char typingLastLetter = chartsofTypingText[countOf];
+            char[] chartsOfExampleText = text.ToCharArray();
 
-            char exampleLastLetter = chartsofExampleText[countOf];
+            char typingLastLetter = chartsOfTypingText[typingTextLenght];
+
+            char exampleLastLetter = chartsOfExampleText[typingTextLenght];
 
             if (typingLastLetter == exampleLastLetter)
             {
@@ -66,6 +83,30 @@ namespace ExampleMenu.View
             else
             {
                 return false;
+            }
+        }
+
+
+        //*определить следующюю букву по тексту
+        private char nextLetter(string typedText,string stringText) {
+
+            if (typedText.Substring(0, typedText.Length) == stringText.Substring(0, typedText.Length))
+            {
+                char[] letter = stringText.ToArray();
+                char toTypingLetter = letter[typedText.Length];
+                return toTypingLetter;
+            }
+            return '*'; 
+        }
+
+        private void keyDownEventHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                spaceButtonClicked = true;
+            }
+            else {
+                spaceButtonClicked = false; 
             }
         }
     }

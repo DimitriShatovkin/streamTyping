@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-        <TextBlock FontSize="18" ><Run Text="Печать началась" Name="exampleText"/></TextBlock>
-        <TextBox Width="200" Margin="0,20,0,0" Text="{Binding InputText}" Name="typingText" TextChanged="typingTextChanged" />
+        <TextBlock FontSize="18" ><Run Text="Der def des" Name="exampleText"/></TextBlock>
+        <TextBox Width="200" Margin="0,20,0,0" KeyDown="keyDownEventHandler"  Text="{Binding InputText}" Name="typingText" TextChanged="typingTextChanged" />
     </StackPanel>
 </UserControl>

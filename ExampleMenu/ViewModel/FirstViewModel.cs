@@ -25,7 +25,7 @@ namespace ExampleMenu.ViewModel
         //Properties
 
         /// <summary>
-        /// Введенная строка в TextBox
+        /// Введенная строка в TextBox create 
         /// </summary>
         private string _InputText;
         public string InputText
@@ -40,7 +40,7 @@ namespace ExampleMenu.ViewModel
 
 
         //Commands
-
+        //
         /// <summary>
         /// Сообщение пользователю
         /// </summary>
